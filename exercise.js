@@ -10,10 +10,28 @@ Questa funzione accetta un id di una ricetta e deve:
 
 
 async function getChefBrithday(recipeId) {
-	const recipeResponse = await fetch(`https://dummyjson.com/recipes/${recipeId}`)
-	const recipeData = await recipeResponse.json();
-	const chefResponse = await fetch(`https://dummyjson.com/users/${recipeData.userId}`);
-	const chefData = await chefResponse.json();
+	let recipeData;
+	try {
+		const recipeResponse = await fetch(`https://dummyjson.com/recipes/${recipeId}`)
+		recipeData = await recipeResponse.json();
+	} catch (error) {
+		throw new Error(`Errore durante il recupero della ricetta con id ${recipeId}`)
+	}
+	if (recipeData.message) {
+		throw new Error(recipeData.message)
+	}
+
+	let chefData;
+	try {
+		const chefResponse = await fetch(`https://dummyjson.com/users/${recipeData.userId}`);
+		chefData = await chefResponse.json();
+	} catch (error) {
+		throw new Error(`Errore durante il recupero dello chef con id ${recipeData.userId}`)
+	}
+	if (chefData.message) {
+		throw new Error(chefData.message)
+	}
+
 	return chefData.birthDate
 }
 
