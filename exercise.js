@@ -32,7 +32,7 @@ async function getChefBrithday(recipeId) {
 		throw new Error(chefData.message)
 	}
 
-	return chefData.birthDate
+	return dayjs(chefData.birthDate).format("DD/MM/YYYY")
 }
 
 (async () => {
